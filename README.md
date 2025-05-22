@@ -18,10 +18,10 @@ This script outputs filtered and sorted .csv file.
 To detect the marine ports run `one_port_check_port_detection.py` script. <br>
 The logic behind this algorithm is as follows:
 - Iterate over each row inside data; get row's coordinates and MMSI
-- Check if row is row is close to any of the already detected ports (by haversine distance being less than 1 km). 
+- Check if row is close to any of the already detected ports (by haversine distance being less than 1 km). 
 - If data point is closer than 1 km away from the port and the ship was not already recorded in this port, append data point to this port. 
 - If data is further away, check the distance with the remaining ships and if they are closer than 1 km away, create a new port for them. 
-- To speed up the process of checking each ship with all remaining ships, an approximation of 1 km latitude was done. Basically, all ships with latitude further away than 1km south or north were imediatelly dropped. 
+- To speed up the process of checking each ship with all remaining ships, an approximation of 1 km latitude was done. Basically, all ships with latitude further away than 1km south or north were immediately dropped. 
 
 This process is extremely time consuming, since with each iteration the list of ports to be checked grows rapidly. Therefore task was parallelized using `multiprocessing` library. Each worker produces a separate .csv file that will be later combined and analyzed. 
 
@@ -41,4 +41,4 @@ Ports were visualized using `matplotlib` and `folium` libraries. `matplotlib` so
 
 ##### Limitations
 Although the majority of detected instances are actually representing the ports, there are some false positives too. Visual inspection of the map shows that some vessels formed a "port" based on the matched criteria (zero or no speed, vessels at close proximity), however, the "port" appears to be in the middle of the body of water. <br>
-Additionally, a trade off was made between the precision and speed. The initial version of port detection algorithm allowed to more precisely evaluate the port coordinates by assigning a vessel to a port only after checking each coordinte of the vessels, that were already assigned to a port. However, this solution expands the number of actions exponentially, hence slows down the algorithm significantly. To combat that, only the first coordinate of the port is checked to decide whether to assign vessel to a port or not. 
+Additionally, a trade off was made between the precision and speed. The initial version of port detection algorithm allowed to more precisely evaluate the port coordinates by assigning a vessel to a port only after checking each coordinate of the vessels, that were already assigned to a port. However, this solution expands the number of actions exponentially, hence slows down the algorithm significantly. To combat that, only the first coordinate of the port is checked to decide whether to assign vessel to a port or not. 
